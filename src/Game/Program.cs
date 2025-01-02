@@ -17,7 +17,7 @@ InputSystem.Events.Key.Down += (key,_) =>  {
 Dictionary<int,Type> sceneDays = new Dictionary<int,Type>()
 {
     {1,typeof(genuary1)},
-    // {2,typeof(genuary2)},
+    {2,typeof(genuary2)},
     // {3,typeof(genuary3)},
     // {4,typeof(genuary4)},
     // {5,typeof(genuary5)},
@@ -52,7 +52,7 @@ Dictionary<int,Type> sceneDays = new Dictionary<int,Type>()
 Engine.Run(new Engine.RunOptions(1280,720,"genuary25", 
 	() =>
 	{
-		var scene = new genuary1();
+		var scene = new genuary2();
 		scene.Mount(0);
 		scene.Load(() => scene.Start());
 	}, 
