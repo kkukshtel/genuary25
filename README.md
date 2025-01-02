@@ -12,7 +12,7 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 
 ![](/src/Game/days/1/genuary1.png)
 
-## day 2 ([src](/src/Game/days/1/genuary2.cs))
+## day 2 ([src](/src/Game/days/2/genuary2.cs))
 "Layers upon layers upon layers."
 
 ![](/src/Game/days/2/genuary2.png)
