@@ -1,10 +1,15 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="meta/banner_white.png">
-  <img alt="zinc logo" src="meta/banner_black.png">
-</picture>
+# genuary25
 
-# zinc
+working on zinc through small creative coding projects
+https://genuary.art/
 
-git submodule update --init --recursive
-
+```bash
 dotnet build && dotnet run --project .\src\Game\Game.csproj
+```
+
+## day 1 ([src](/src/Game/days/1/genuary1.cs))
+"Vertical or horizontal lines only."
+
+![](/src/Game/days/1/genuary1.png)
+
+
