@@ -17,4 +17,9 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 
 ![](/src/Game/days/2/genuary2.png)
 
+## day 3 ([src](/src/Game/days/3/genuary3.cs))
+"Exactly 42 lines of code."
+
+![](/src/Game/days/3/genuary3.png)
+
 
