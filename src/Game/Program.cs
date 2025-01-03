@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection;
 using genuary25;
 using Zinc;
 using Zinc.Core;
@@ -14,41 +15,8 @@ InputSystem.Events.Key.Down += (key,_) =>  {
 	}
 };
 
-Dictionary<int,Type> sceneDays = new Dictionary<int,Type>()
-{
-    {1,typeof(genuary1)},
-    {2,typeof(genuary2)},
-    // {3,typeof(genuary3)},
-    // {4,typeof(genuary4)},
-    // {5,typeof(genuary5)},
-    // {6,typeof(genuary6)},
-    // {7,typeof(genuary7)},
-    // {8,typeof(genuary8)},
-    // {9,typeof(genuary9)},
-    // {10,typeof(genuary10)},
-    // {11,typeof(genuary11)},
-    // {12,typeof(genuary12)},
-    // {13,typeof(genuary13)},
-    // {14,typeof(genuary14)},
-    // {15,typeof(genuary15)},
-    // {16,typeof(genuary16)},
-    // {17,typeof(genuary17)},
-    // {18,typeof(genuary18)},
-    // {19,typeof(genuary19)},
-    // {20,typeof(genuary20)},
-    // {21,typeof(genuary21)},
-    // {22,typeof(genuary22)},
-    // {23,typeof(genuary23)},
-    // {24,typeof(genuary24)},
-    // {25,typeof(genuary25)},
-    // {26,typeof(genuary26)},
-    // {27,typeof(genuary27)},
-    // {28,typeof(genuary28)},
-    // {29,typeof(genuary29)},
-    // {30,typeof(genuary30)},
-    // {31,typeof(genuary31)},
-};
 
+List<SketchInfo> sketches = getSketches().ToList().OrderBy(info => info.Name).ToList();
 Engine.Run(new Engine.RunOptions(1280,720,"genuary25", 
 	() =>
 	{
@@ -72,13 +40,13 @@ void drawDemoOptions()
 		ImGUI.Menu("days", () =>
 		{
 			Scene? scene = null;
-			foreach (var entry in sceneDays)
+			foreach (var entry in sketches)
 			{
-				if (ImGUI.MenuItem(entry.Key.ToString()))
+				if (ImGUI.MenuItem(entry.Name))
 				{
-					scene = Activator.CreateInstance(entry.Value) as Scene;
+					scene = Activator.CreateInstance(entry.Type) as Scene;
 					// scene = Activator.CreateInstance(type.Type) as Scene;
-					scene.Name = entry.Key.ToString();
+					scene.Name = entry.Name;
 				}
 			}
 			if (scene != null)
@@ -100,4 +68,30 @@ void drawDemoOptions()
 			});
 		});
 	});
+}
+
+
+IEnumerable<SketchInfo> getSketches()
+{
+    return Assembly.GetExecutingAssembly().GetTypes()
+        .Where(type => type.Namespace == "genuary25")
+        .Select(type => new
+        {
+            Type = type,
+            Attribute = type.GetCustomAttribute<GenuarySketchAttribute>()
+        })
+        .Where(t => t.Attribute != null)
+        .Select(t => new SketchInfo(t.Type, t.Attribute.Name))
+        .OrderBy((info => info.Name));
+}
+public record SketchInfo(Type Type, string Name);
+
+[AttributeUsage(AttributeTargets.Class)]
+public class GenuarySketchAttribute : Attribute
+{
+    public string Name { get; private set; }
+    public GenuarySketchAttribute(string name)
+    {
+        Name = name;
+    }
 }

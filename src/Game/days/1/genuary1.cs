@@ -4,7 +4,7 @@ using Zinc.Core;
 using static Zinc.Core.ImGUI;
 
 namespace genuary25;
-
+[GenuarySketch("day1")]
 public class genuary1 : Scene
 {
     int gridDim = 16;
