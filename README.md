@@ -22,4 +22,9 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 
 ![](/src/Game/days/3/genuary3.png)
 
+## day 4 ([src](/src/Game/days/4/genuary4.cs))
+"Black on black."
+
+![](/src/Game/days/4/genuary4.png)
+
 

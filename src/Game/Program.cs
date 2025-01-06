@@ -20,7 +20,7 @@ List<SketchInfo> sketches = getSketches().ToList().OrderBy(info => info.Name).To
 Engine.Run(new Engine.RunOptions(1280,720,"genuary25", 
 	() =>
 	{
-		var scene = new genuary2();
+		var scene = new genuary1();
 		scene.Mount(0);
 		scene.Load(() => scene.Start());
 	}, 
