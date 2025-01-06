@@ -17,6 +17,7 @@ public class genuary2 : Scene
     {
         noise = new OctaviaNoise(seed: 88883);
         g = new Grid(cellWidth:cellDim, cellHeight:cellDim, numHorizontalCells:gridDim, numVerticalCells:gridDim);
+        Quick.Center(g);
         
         for (int i = 0; i < gridDim * gridDim; i++)
         {

@@ -13,6 +13,7 @@ public class genuary3 : Scene
     public override void Create()
     {
         g = new Grid(cellWidth:cellDim, cellHeight:cellDim, numHorizontalCells:gridDim, numVerticalCells:gridDim);
+        Quick.Center(g);
         var colorChange = new ColorTween(Palettes.ONE_BIT_MONITOR_GLOW[1],Palettes.ONE_BIT_MONITOR_GLOW[0],Easing.EaseOutQuint);
         var attractor = new SceneEntity(true,update:(self,dt) => {
             (self as Anchor).X = (float)(MathF.Cos((float)Engine.Time/1.04f) * 7.542f + Engine.Width/2);
@@ -36,7 +37,9 @@ public class genuary3 : Scene
                 {
                     self.Renderer_Color = Palettes.ONE_BIT_MONITOR_GLOW[0];
                 }
-            }));
+            }
+            ));
+            Quick.Center(a);
         }
     }
 }

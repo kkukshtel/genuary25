@@ -13,9 +13,8 @@ public class genuary1 : Scene
     {
         var noise = new OctaviaNoise(seed: 88883);
 
-        var g = new Grid(cellWidth:cellDim, cellHeight:cellDim, numHorizontalCells:gridDim, numVerticalCells:gridDim, update: (self, dt) =>{
-            // self.Rotation += (float)dt;
-        });
+        var g = new Grid(cellWidth:cellDim, cellHeight:cellDim, numHorizontalCells:gridDim, numVerticalCells:gridDim);
+        Quick.Center(g);
 
         for (int i = 0; i < gridDim * gridDim; i++)
         {
@@ -26,8 +25,8 @@ public class genuary1 : Scene
 
             var a = g.AddChild(
                 new SceneEntity(true,children:[
-                    new Shape(width:cellDim,height:8){X=0,Y=0,Name="hor",Renderer_Color=Palettes.ONE_BIT_MONITOR_GLOW[0]},
-                    new Shape(height:cellDim,width:8){X=0,Y=0,Name="ver",Renderer_Color=Palettes.ONE_BIT_MONITOR_GLOW[0]},
+                    new Shape(width:cellDim,height:8){Name="hor",Renderer_Color=Palettes.ONE_BIT_MONITOR_GLOW[0]},
+                    new Shape(height:cellDim,width:8){Name="ver",Renderer_Color=Palettes.ONE_BIT_MONITOR_GLOW[0]},
                 ]){
                     Name = $"{noiseSample}"
                 });
