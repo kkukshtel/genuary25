@@ -5,39 +5,27 @@ using System.Collections;
 
 using static Zinc.Core.ImGUI;
 using System.Diagnostics;
+using Volatile;
 
 namespace genuary25;
 
 [GenuarySketch("day5")]
 public class genuary5 : Scene
 {
-    //make a grid compose of towers of squares
-    //towers are placed randomly on the grid based off noise map
-    //height is based off noise map
-    //towers sway towards mouse position, with slices of the towers moving based off 
-    //a delay and interpolated point based on their height in the tower
-
-    int gridDim = 42;
-    int squareSize = 57;
-    int gridCellDim = 64;
-    int outlineWidth = 4;
-    float numSlices = 10;
-    int gridDimInCells = 3;
-    List<Shape> allShapes = new();
-    List<Anchor> allSlices = new();
-    float baseOffset = 100;
     OctaviaNoise noise = new OctaviaNoise(seed: 42);
-    public record BaseYPos(float y, int index) : Tag($"BASEYPOS:{y},INDEX:{index}");
-
+    public record ShapeInfo(float sway, SceneEntity column) : Tag($"column");
     public float kernelDim = 25f;
     public float fieldDim = 100f;
     float sliceHeight = 10;
     float cellDim = 30;
     Grid root;
+    float maxColumnHeight = 400; //this is based on noise sample of 1 + 1 * 200
+    float maxSway = 100;
+    float attractorMax = 300;
     public override void Create()
     {
         // int gridDim = MathF.Floor(fieldDim / kernelDim);
-        int gridDim = 5;
+        int gridDim = 10;
         int noiseMapSize = 100;
         float kernelSize = noiseMapSize / (float)gridDim;
         root = new Grid(cellWidth:cellDim, cellHeight:cellDim, numHorizontalCells:gridDim, numVerticalCells:gridDim,update:(self,dt) => {
@@ -46,6 +34,14 @@ public class genuary5 : Scene
             RotationBehavior = GridComponent.ChildRotationBehavior.Invert
         };
         Quick.Center(root);
+        root.Y += 150f;
+
+        var attractor = new SceneEntity(true){
+            Name = "attractor",
+        };
+        Quick.Center(attractor);
+        new Coroutine(MoveAttractor(attractor));
+
         
         for (int y = 0; y < gridDim; y++)
         {
@@ -73,16 +69,24 @@ public class genuary5 : Scene
                 };
                 var rendStart = 2000 * -renderColumnIndex;
                 var colorChange = new ColorTween(Palettes.ONE_BIT_MONITOR_GLOW[0],Palettes.ONE_BIT_MONITOR_GLOW[1],Easing.EaseInCirc);
-
+                var maxSwayTween = new FloatTween(0,maxSway,Easing.EaseInCubic);
                 for (int i = 0; i < numColumnSlices; i++)
                 {
-                    var a = new Shape(width:cellDim,height:cellDim){
+                    var a = new Shape(width:cellDim,height:cellDim,update:(self,dt) => {
+                        self.GetTag<ShapeInfo>(out var tag);
+                        var sway = new FloatTween(0,tag.sway,Easing.EaseInOutQuad);
+                        var mouseDist = attractor.X - tag.column.X;
+                        var sign = MathF.Sign(mouseDist);
+                        var sample = sway.Sample(Mathf.Clamp(MathF.Abs(mouseDist),0,attractorMax)/attractorMax) * sign;
+                        self.X = column.X + sample;
+                    }){
                         RenderOrder = rendStart - i,
                         Y = i * -sliceHeight,
-                        Renderer_Color = colorChange.Sample(Quick.Map(i,0,numColumnSlices,0,1)),
+                        Renderer_Color = colorChange.Sample(Quick.Map(i,0,maxColumnHeight/sliceHeight,0,1)),
+                        Tags = [new ShapeInfo(maxSwayTween.Sample(i / numColumnSlices),column)],
                         Rotation = MathF.PI/4f, // 45 degrees will make it look like a diamond
                     };
-                    new Coroutine(MoveTowardsMouse(a));
+                    // new Coroutine(MoveTowardsMouse(a));
                     column.AddChild(a);
                 }
                 root.AddChild(column);
@@ -95,35 +99,19 @@ public class genuary5 : Scene
 
     }
 
-    public IEnumerator MoveTowardsMouse(Shape shape)
+    public IEnumerator MoveAttractor(SceneEntity e)
     {
-        var basePos = new Vector2(shape.X, shape.Y);
+        var flipflop = false;
         while(true)
         {
-            yield return new FloatTween(shape.X, InputSystem.MouseX, Easing.EaseOutQuad)
+            yield return new FloatTween(-attractorMax, attractorMax, Easing.EaseInOutQuad)
             {
-                Duration = 0.5f,
+                Duration = (Quick.RandFloat() + 1f) * 3,
                 ValueUpdated = (v) => {
-                    shape.X = v;
+                    e.X = (Engine.Width / 2f) + (v * (flipflop ? 1 : -1));
                 },
             };
-            
-            yield return new WaitForSeconds(0.1f);
-        }
-    }
-
-    public override void Update(double dt)
-    {
-        if(Engine.ShowMenu)
-        {
-            var rootX = root.X;
-            var rootY = root.Y;
-            Window("params", () => {
-                SliderFloat("rootX",ref rootX,0,1000,"",SliderFlags.None);
-                SliderFloat("rootY",ref rootY,0,1000,"",SliderFlags.None);
-            });
-            root.X = rootX;
-            root.Y = rootY;
+            flipflop = !flipflop;
         }
     }
 }
