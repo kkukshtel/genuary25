@@ -36,4 +36,7 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 ### skipped day 6/7 for holiday travel
 --- 
 
+## day 8 ([src](/src/Game/days/8/genuary8.cs))
+"Draw one million of something."
 
+![](/src/Game/days/8/genuary8.png)
