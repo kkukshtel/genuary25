@@ -40,3 +40,8 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 "Draw one million of something."
 
 ![](/src/Game/days/8/genuary8.png)
+
+## day 9 ([src](/src/Game/days/9/genuary9.cs))
+"The textile design patterns of public transport seating."
+
+![](/src/Game/days/9/genuary9.png)
