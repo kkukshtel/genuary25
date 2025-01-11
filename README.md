@@ -45,3 +45,8 @@ dotnet build && dotnet run --project .\src\Game\Game.csproj
 "The textile design patterns of public transport seating."
 
 ![](/src/Game/days/9/genuary9.png)
+
+## day 10 ([src](/src/Game/days/10/genuary10.cs))
+"You can only use TAU in your code, no other number allowed."
+
+![](/src/Game/days/10/genuary10.png)
